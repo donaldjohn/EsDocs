@@ -1,0 +1,209 @@
+curl -X PUT "localhost:9200/customer?pretty&pretty"
+curl -X GET "localhost:9200/_cat/indices?v&pretty"
+
+curl -X PUT "localhost:9200/customer/external/1?pretty&pretty" -H 'Content-Type: application/json' -d'
+{
+  "name": "John Doe"
+}
+'
+
+curl -X GET "localhost:9200/customer/external/1?pretty&pretty"
+
+curl -X DELETE "localhost:9200/customer?pretty&pretty"
+curl -X GET "localhost:9200/_cat/indices?v&pretty"
+
+
+
+curl -X POST "localhost:9200/customer/external?pretty&pretty" -H 'Content-Type: application/json' -d'
+{
+  "name": "Jane Doe"
+}
+'
+
+
+curl -X POST "localhost:9200/customer/external/1/_update?pretty&pretty" -H 'Content-Type: application/json' -d'
+{
+  "doc": { "name": "Jane Doe" }
+}
+'
+
+curl -X POST "localhost:9200/customer/external/1/_update?pretty&pretty" -H 'Content-Type: application/json' -d'
+{
+  "doc": { "name": "Jane Doe" }
+}
+'
+
+curl -X POST "localhost:9200/customer/external/1/_update?pretty&pretty" -H 'Content-Type: application/json' -d'
+{
+  "doc": { "name": "Jane Doe", "age": 20 }
+}
+'
+
+curl -X POST "localhost:9200/customer/external/1/_update?pretty&pretty" -H 'Content-Type: application/json' -d'
+{
+  "script" : "ctx._source.age += 5"
+}
+'
+
+
+
+
+curl -X GET "localhost:9200/twitter/tweet/1/_termvectors?pretty"
+
+
+curl -X GET "localhost:9200/twitter/tweet/1/_termvectors?pretty" -H 'Content-Type: application/json' -d'
+{
+  "fields" : ["text", "some_field_without_term_vectors"],
+  "offsets" : true,
+  "positions" : true,
+  "term_statistics" : true,
+  "field_statistics" : true
+}
+'
+
+
+
+curl -X POST "localhost:9200/twitter/tweet?routing=kimchy&pretty" -H 'Content-Type: application/json' -d'
+{
+    "user" : "kimchy",
+    "postDate" : "2009-11-15T14:12:12",
+    "message" : "trying out Elasticsearch"
+}
+'
+
+
+curl -X POST "localhost:9200/_search?pretty" -H 'Content-Type: application/json' -d'
+{
+    "query" : {
+        "match_all" : {}
+    }
+}
+'
+
+
+curl -X GET "localhost:9200/twitter/tweet/_search?pretty" -H 'Content-Type: application/json' -d'
+{
+    "query" : {
+        "term" : { "user" : "kimchy" }
+    }
+}
+'
+
+
+curl -X PUT "localhost:9200/my_index?pretty" -H 'Content-Type: application/json' -d'
+{
+    "mappings": {
+        "my_type": {
+            "properties": {
+                "post_date": { "type": "date" },
+                "user": {
+                    "type": "keyword"
+                },
+                "name": {
+                    "type": "keyword"
+                },
+                "age": { "type": "integer" }
+            }
+        }
+    }
+}
+'
+
+
+curl -X GET "localhost:9200/my_index/my_type/_search?pretty" -H 'Content-Type: application/json' -d'
+{
+    "sort" : [
+        { "post_date" : {"order" : "asc"}},
+        "user",
+        { "name" : "desc" },
+        { "age" : "desc" },
+        "_score"
+    ],
+    "query" : {
+        "term" : { "user" : "kimchy" }
+    }
+}
+'
+
+
+
+curl -X GET "localhost:9200/_search?pretty" -H 'Content-Type: application/json' -d'
+{
+    "stored_fields" : ["user", "postDate"],
+    "query" : {
+        "term" : { "user" : "kimchy" }
+    }
+}
+'
+
+curl -X GET "localhost:9200/_search?pretty" -H 'Content-Type: application/json' -d'
+{
+    "query" : {
+        "match_all": {}
+    },
+    "docvalue_fields" : ["test1", "test2"]
+}
+'
+
+curl -X GET "localhost:9200/_search?pretty" -H 'Content-Type: application/json' -d'
+{
+    "query" : {
+        "match_all": {}
+    },
+    "docvalue_fields" : ["brand", "color"]
+}
+'
+
+curl -X PUT "localhost:9200/shirts?pretty" -H 'Content-Type: application/json' -d'
+{
+    "mappings": {
+        "item": {
+            "properties": {
+                "brand": { "type": "keyword"},
+                "color": { "type": "keyword"},
+                "model": { "type": "keyword"}
+            }
+        }
+    }
+}
+'
+curl -X PUT "localhost:9200/shirts/item/1?refresh&pretty" -H 'Content-Type: application/json' -d'
+{
+    "brand": "gucci",
+    "color": "red",
+    "model": "slim"
+}
+'
+
+
+
+
+curl -X GET "localhost:9200/_search?pretty" -H 'Content-Type: application/json' -d'
+{
+    "query" : {
+        "match": { "content": "kimchy" }
+    },
+    "highlight" : {
+        "fields" : {
+            "content" : {}
+        }
+    }
+}
+'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
